@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calendar Widget</title>
+  <title>Widget de Calendário</title>
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       background: #ffffff;
       font-variant-caps: all-petite-caps;
+      font-family: monospace;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
     }
 
     .widget {
@@ -24,7 +25,6 @@
       border-radius: 5px;
       box-shadow: 2px 2px 1px 0px #F24478;
       background: #ffffff;
-      font-family: monospace;
     }
 
     .greet {
@@ -52,7 +52,6 @@
   </style>
 </head>
 <body>
-
   <div class="widget">
     <div class="greet" id="greet"></div>
     <div class="date" id="date"></div>
@@ -66,52 +65,41 @@
   </div>
 
   <script>
-    function displayGreetings(today) {
-      const hrs = today.getHours();
-      let greet = "";
-      if (hrs < 12) greet = "Bom dia, Catalyst";
-      else if (hrs < 18) greet = "Boa tarde, Catalyst";
-      else greet = "Boa noite, Catalyst";
-      document.getElementById("greet").innerText = greet;
+    const locale = 'pt-BR';
+    const timeZone = 'America/Sao_Paulo';
+
+    function displayGreetings(hour) {
+      if (hour < 12) return 'Bom dia, Catalyst';
+      if (hour < 18) return 'Boa tarde, Catalyst';
+      return 'Boa noite, Catalyst';
     }
 
-    function displayDate(today) {
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const day = days[today.getDay()];
-      const month = months[today.getMonth()];
-      const date = today.getDate();
-      const year = today.getFullYear();
-      document.getElementById("date").innerText = `${day}, ${month} ${date} ${year}`;
+    function padZero(num) {
+      return num.toString().padStart(2, '0');
     }
 
-    function displayClock(today) {
-      const hour = padZeros(to12Hour(today.getHours()));
-      const minutes = padZeros(today.getMinutes());
-      const seconds = padZeros(today.getSeconds());
-      const ampm = today.getHours() >= 12 ? "pm" : "am";
-      document.getElementById("hour").innerText = hour;
-      document.getElementById("min").innerText = minutes;
-      document.getElementById("sec").innerText = seconds + " " + ampm;
-    }
-
-    function to12Hour(hour) {
-      return hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    }
-
-    function padZeros(num) {
-      return num < 10 ? "0" + num : num;
-    }
-
-    function displayWidget() {
+    function updateWidget() {
       const now = new Date();
-      displayGreetings(now);
-      displayDate(now);
-      displayClock(now);
-      setTimeout(displayWidget, 1000);
+
+      const options = { timeZone, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const data = now.toLocaleDateString(locale, options);
+
+      const timeOptions = { timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      const timeString = new Intl.DateTimeFormat(locale, timeOptions).format(now);
+      const [hourStr, minStr, secStr] = timeString.split(':');
+
+      const greeting = displayGreetings(Number(hourStr));
+
+      document.getElementById('greet').innerText = greeting;
+      document.getElementById('date').innerText = data;
+      document.getElementById('hour').innerText = padZero(hourStr);
+      document.getElementById('min').innerText = padZero(minStr);
+      document.getElementById('sec').innerText = padZero(secStr);
+
+      setTimeout(updateWidget, 1000);
     }
 
-    displayWidget();
+    updateWidget();
   </script>
 </body>
 </html>
