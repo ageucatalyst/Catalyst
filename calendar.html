@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: #F191919;
+      background: #ffffff;
       font-variant-caps: all-petite-caps;
       display: flex;
       justify-content: center;
@@ -18,12 +18,12 @@
 
     .widget {
       padding: 10px 15px;
-      color: #000;
+      color: #F24478;
       text-align: center;
-      border: 3px solid #000;
+      border: 3px solid #F24478;
       border-radius: 5px;
-      box-shadow: 2px 2px 1px 0px #000;
-      background: #fff;
+      box-shadow: 2px 2px 1px 0px #F24478;
+      background: #ffffff;
       font-family: monospace;
     }
 
@@ -69,9 +69,9 @@
     function displayGreetings(today) {
       const hrs = today.getHours();
       let greet = "";
-      if (hrs < 12) greet = "Good Morning";
-      else if (hrs < 18) greet = "Good Afternoon";
-      else greet = "Good Evening";
+      if (hrs < 12) greet = "Bom dia, Catalyst";
+      else if (hrs < 18) greet = "Boa tarde, Catalyst";
+      else greet = "Boa noite, Catalyst";
       document.getElementById("greet").innerText = greet;
     }
 
