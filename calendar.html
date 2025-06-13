@@ -5,18 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Widget de Tempo Estético</title>
     <style>
-      /* Exemplo de @font-face para AFACAD (substitua url pelo caminho real do arquivo, se tiver) */
-      /*
-      @font-face {
-        font-family: 'AFACAD';
-        src: url('AFACAD.woff2') format('woff2'),
-             url('AFACAD.woff') format('woff'),
-             url('AFACAD.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      */
-
+      /* Fonte padrão para evitar problemas no Notion */
       body {
         margin: 0;
         padding: 0;
@@ -221,4 +210,14 @@
       function setRandomQuote() {
         const randomIndex = Math.floor(Math.random() * quotes.length);
         const selectedQuote = quotes[randomIndex];
-        d
+        document.getElementById("quote").innerHTML = formatQuote(selectedQuote.text);
+        document.getElementById("author").textContent = selectedQuote.author;
+      }
+
+      updateTimeAndDate();
+      setRandomQuote();
+      setInterval(updateTimeAndDate, 1000);
+      setInterval(setRandomQuote, 60000);
+    </script>
+  </body>
+</html>
