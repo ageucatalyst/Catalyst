@@ -2,20 +2,14 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Widget de Tempo Estético</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      /* Fonte padrão para evitar problemas no Notion */
       body {
         margin: 0;
         padding: 0;
-        font-family: "Space Grotesk", sans-serif;
-        /* Fundo animado conforme seu CSS */
+        font-family: Arial, Helvetica, sans-serif;
         background-color: hsla(5, 100%, 69%, 1);
         background-image:
           radial-gradient(at 59% 64%, hsla(342, 100%, 65%, 0.56) 0px, transparent 50%),
@@ -36,8 +30,7 @@
       }
 
       @keyframes mexefundo {
-        0%,
-        100% {
+        0%, 100% {
           background-position: 0% 0%;
         }
         50% {
@@ -50,27 +43,19 @@
         padding: 30px;
         width: 380px;
         background: rgba(0, 0, 0, 0.3);
-        border-radius: 1px;
+        border-radius: 4px;
         backdrop-filter: blur(5px);
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(0, 0, 0, 0.2);
-      }
-
-      .time {
-        font-size: 56px;
-        font-weight: 700;
-        letter-spacing: 3px;
-        margin-bottom: 10px;
         color: #ffffff;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
       }
 
-      .date {
-        font-size: 16px;
-        font-weight: 300;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        color: #f8f8ff;
+      .greeting {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        letter-spacing: 1.5px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
       }
 
       .day {
@@ -79,20 +64,33 @@
         text-transform: uppercase;
         letter-spacing: 4px;
         margin-bottom: 5px;
-        color: #ffffff;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .date {
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+      }
+
+      .time {
+        font-size: 56px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
       }
 
       .quote-container {
         margin-top: 5px;
         padding: 5px;
-        border-radius: 1px;
+        border-radius: 4px;
         background: rgba(0, 0, 0, 0.3);
         color: #b0c4de;
       }
 
       .quote {
-        font-family: "Space Grotesk", sans-serif;
         font-size: 18px;
         font-style: italic;
         line-height: 1.5;
@@ -100,7 +98,7 @@
       }
 
       .author {
-        font-family: "Consolas", monospace;
+        font-family: Consolas, monospace;
         font-size: 14px;
         text-align: right;
         color: #ffffff;
@@ -110,6 +108,7 @@
   </head>
   <body>
     <div class="widget">
+      <div class="greeting" id="greeting"></div>
       <div class="day" id="day"></div>
       <div class="date" id="date"></div>
       <div class="time" id="time"></div>
@@ -118,6 +117,7 @@
         <div class="author" id="author"></div>
       </div>
     </div>
+
     <script>
       const quotes = [
         {
@@ -153,7 +153,6 @@
         },
       ];
 
-      // Função para pegar hora e data no fuso de Brasília e formatar em português do Brasil
       function updateTimeAndDate() {
         const optionsDate = {
           weekday: "long",
@@ -172,44 +171,51 @@
 
         const now = new Date();
 
-        // Usar Intl.DateTimeFormat para data em pt-BR fuso São Paulo (Brasília)
+        // Formatar data e extrair dia da semana e o resto
         const dateFormatter = new Intl.DateTimeFormat("pt-BR", optionsDate);
-        const fullDate = dateFormatter.format(now); // Ex: "quinta-feira, 13 de junho de 2025"
-
-        // Extrair dia da semana e resto da data
+        const fullDate = dateFormatter.format(now); // ex: quinta-feira, 13 de junho de 2025
         const dayOfWeek = fullDate.split(",")[0];
         const dateRest = fullDate.split(",").slice(1).join(",").trim();
 
         // Formatar hora
         const timeFormatter = new Intl.DateTimeFormat("pt-BR", optionsTime);
         const timeParts = timeFormatter.formatToParts(now);
-        const hour = timeParts.find((part) => part.type === "hour").value;
-        const minute = timeParts.find((part) => part.type === "minute").value;
-        const second = timeParts.find((part) => part.type === "second").value;
-        const time = `${hour}:${minute}:${second}`;
+        const hour = Number(timeParts.find((p) => p.type === "hour").value);
+        const minute = timeParts.find((p) => p.type === "minute").value;
+        const second = timeParts.find((p) => p.type === "second").value;
+        const time = `${String(hour).padStart(2,"0")}:${minute}:${second}`;
 
+        // Saudação conforme horário
+        let greetingText = "";
+        if (hour >= 6 && hour < 12) {
+          greetingText = "Bom dia, Catalyst";
+        } else if (hour >= 12 && hour < 18) {
+          greetingText = "Boa tarde, Catalyst";
+        } else {
+          greetingText = "Boa noite, Catalyst";
+        }
+
+        document.getElementById("greeting").textContent = greetingText;
         document.getElementById("day").textContent = dayOfWeek.toUpperCase();
         document.getElementById("date").textContent = dateRest;
         document.getElementById("time").textContent = time;
       }
 
       function formatQuote(text) {
-        return text.replace(/,\s+/g, ",<br>").replace(/\s+and\s+/g, "<br>e ");
+        return text.replace(/,\s+/g, ",<br>").replace(/\s+e\s+/g, "<br>e ");
       }
 
       function setRandomQuote() {
         const randomIndex = Math.floor(Math.random() * quotes.length);
         const selectedQuote = quotes[randomIndex];
-        document.getElementById("quote").innerHTML = `${formatQuote(
-          selectedQuote.text
-        )}`;
+        document.getElementById("quote").innerHTML = formatQuote(selectedQuote.text);
         document.getElementById("author").textContent = selectedQuote.author;
       }
 
       updateTimeAndDate();
       setRandomQuote();
       setInterval(updateTimeAndDate, 1000);
-      setInterval(setRandomQuote, 60000); // Troca a frase a cada minuto
+      setInterval(setRandomQuote, 60000);
     </script>
   </body>
 </html>
