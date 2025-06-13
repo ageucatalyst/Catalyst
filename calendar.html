@@ -5,31 +5,42 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saudação e Relógio</title>
+    <title>Saudação e Relógio com Fundo Animado</title>
 
     <style>
         /* CSS Reset */
-        body {
-            background-color: #fff;
-            line-height: 1.6;
+        body, html {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100%;
+            overflow: hidden;
             font-family: 'Bebas Neue', cursive;
         }
 
-        h1 {
-            margin-top: 0;
+        /* Background animado com gradiente que se move suavemente */
+        body {
+            background: linear-gradient(270deg, #f24478, #553c4e, #330835, #f24478);
+            background-size: 800% 800%;
+            animation: gradientAnim 20s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
         }
 
-        /* CSS Principal */
+        @keyframes gradientAnim {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+
+        /* Container central */
         .full-table {
             display: table;
             height: 100%;
             width: 100%;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .table-cell {
@@ -41,12 +52,12 @@
         .card {
             padding: 10px 25px;
             border-radius: 10px;
-            background: #553c4e;
+            background: rgba(85, 60, 78, 0.75);
             width: 85vw;
             max-width: 480px;
             color: #fff;
             display: inline-block;
-            box-shadow: 2px 2px 1px 0px #330835;
+            box-shadow: 2px 2px 8px rgba(51, 8, 53, 0.8);
         }
 
         .card:hover {
@@ -87,13 +98,13 @@
 
         .quote {
             margin-top: 15px;
-            font-family: 'Space Grotesk', sans-serif;
             font-style: italic;
             font-size: 1.2rem;
-            color: #fff;
             max-width: 400px;
             margin-left: auto;
             margin-right: auto;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
         }
 
         .author {
@@ -133,17 +144,16 @@
 <script>
     function atualizarData() {
         const hoje = new Date();
-        // Opções para data em português BR e fuso de Brasília
         const opcoes = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Sao_Paulo' };
-        const dataFormatada = hoje.toLocaleDateString('pt-BR', opcoes);
-        document.getElementById('date').innerHTML = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+        let dataFormatada = hoje.toLocaleDateString('pt-BR', opcoes);
+        dataFormatada = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+        document.getElementById('date').innerHTML = dataFormatada;
     }
 
     function atualizarRelogio() {
         const agora = new Date();
 
-        // Ajuste para fuso horário de Brasília (UTC-3)
-        const offsetSP = -3 * 60; // minutos de diferença
+        const offsetSP = -3 * 60; // -3 horas em minutos
         const utc = agora.getTime() + agora.getTimezoneOffset() * 60000;
         const horaSP = new Date(utc + offsetSP * 60000);
 
@@ -155,7 +165,6 @@
         document.getElementById('min').innerHTML = minutos;
         document.getElementById('sec').innerHTML = segundos;
 
-        // Saudação conforme horário de Brasília
         const h = horaSP.getHours();
         let saudacao = '';
         if (h < 12) saudacao = 'Bom dia, Catalyst';
