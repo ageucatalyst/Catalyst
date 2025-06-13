@@ -1,49 +1,117 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calendário</title>
+  <title>Calendar Widget</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      font-family: monospace;
-      background: #191919;
-      color: #fff;
-    }
-
-    #calendar {
-      font-size: 14px;
-      margin: 0;
-      padding: 0;
+      background: #F191919;
+      font-variant-caps: all-petite-caps;
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
     }
 
-    table {
-      border-collapse: collapse;
-      table-layout: fixed;
-      width: 100%;
-      max-width: 320px;
-      background-color: #2a2a2a;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    .widget {
+      padding: 10px 15px;
+      color: #000;
+      text-align: center;
+      border: 3px solid #000;
+      border-radius: 5px;
+      box-shadow: 2px 2px 1px 0px #000;
+      background: #fff;
+      font-family: monospace;
     }
 
-    .month {
-      background-color: #F24478;
-      color: #fff;
-      font-size: 1.2em;
-      padding: 0.6em 0;
+    .greet {
+      font-size: 2em;
+      margin-bottom: 10px;
     }
 
-    .year {
-      display: block;
-      font-size: 0.8em;
-      font-weight: normal;
+    .date {
+      font-size: 1.5em;
+      margin-bottom: 5px;
     }
 
-    .day-header {
+    .clock {
+      font-size: 1.5em;
+    }
+
+    .time {
+      display: inline-block;
+      min-width: 24px;
+    }
+
+    .colon {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget">
+    <div class="greet" id="greet"></div>
+    <div class="date" id="date"></div>
+    <div class="clock">
+      <span class="time" id="hour"></span>
+      <span class="colon">:</span>
+      <span class="time" id="min"></span>
+      <span class="colon">:</span>
+      <span class="time" id="sec"></span>
+    </div>
+  </div>
+
+  <script>
+    function displayGreetings(today) {
+      const hrs = today.getHours();
+      let greet = "";
+      if (hrs < 12) greet = "Good Morning";
+      else if (hrs < 18) greet = "Good Afternoon";
+      else greet = "Good Evening";
+      document.getElementById("greet").innerText = greet;
+    }
+
+    function displayDate(today) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const day = days[today.getDay()];
+      const month = months[today.getMonth()];
+      const date = today.getDate();
+      const year = today.getFullYear();
+      document.getElementById("date").innerText = `${day}, ${month} ${date} ${year}`;
+    }
+
+    function displayClock(today) {
+      const hour = padZeros(to12Hour(today.getHours()));
+      const minutes = padZeros(today.getMinutes());
+      const seconds = padZeros(today.getSeconds());
+      const ampm = today.getHours() >= 12 ? "pm" : "am";
+      document.getElementById("hour").innerText = hour;
+      document.getElementById("min").innerText = minutes;
+      document.getElementById("sec").innerText = seconds + " " + ampm;
+    }
+
+    function to12Hour(hour) {
+      return hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    }
+
+    function padZeros(num) {
+      return num < 10 ? "0" + num : num;
+    }
+
+    function displayWidget() {
+      const now = new Date();
+      displayGreetings(now);
+      displayDate(now);
+      displayClock(now);
+      setTimeout(displayWidget, 1000);
+    }
+
+    displayWidget();
+  </script>
+</body>
+</html>
