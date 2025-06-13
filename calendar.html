@@ -9,13 +9,17 @@
       margin: 0;
       padding: 0;
       font-family: monospace;
-      background: #ffffff;
+      background: #191919;
+      color: #fff;
     }
 
     #calendar {
       font-size: 14px;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     table {
@@ -23,17 +27,17 @@
       table-layout: fixed;
       width: 100%;
       max-width: 320px;
-      background-color: #fff;
-      border: none;
-      border-radius: 10px;
+      background-color: #2a2a2a;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
 
     .month {
       background-color: #F24478;
       color: #fff;
       font-size: 1.2em;
-      padding: 0.5em 0;
+      padding: 0.6em 0;
     }
 
     .year {
@@ -43,142 +47,3 @@
     }
 
     .day-header {
-      background-color: #FFD5DE;
-      color: #F24478;
-      font-weight: bold;
-    }
-
-    th, td {
-      text-align: center;
-      padding: 0.6em 0;
-      color: #444;
-    }
-
-    td > span {
-      display: inline-block;
-      width: 2em;
-      height: 2em;
-      line-height: 2em;
-      border-radius: 50%;
-      transition: background 0.3s;
-    }
-
-    td.avui > span {
-      background-color: #F24478;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    td.fora > span {
-      opacity: 0.3;
-    }
-
-    .boto-prev,
-    .boto-next {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.2em;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 0 0.5em;
-    }
-  </style>
-</head>
-<body>
-  <div id="calendar"></div>
-
-  <script>
-    const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-    const days_abr = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-
-    Number.prototype.pad = function(n) {
-      return this.toString().padStart(n, '0');
-    }
-
-    function calendar(widget, data) {
-      widget.innerHTML = ''; // limpa
-
-      const table = document.createElement('table');
-      table.setAttribute('data-actual', `${data.getFullYear()}/${(data.getMonth()+1).pad(2)}/${data.getDate().pad(2)}`);
-      
-      // Header
-      const headerRow = document.createElement('tr');
-      const header = document.createElement('th');
-      header.className = 'month';
-      header.colSpan = 7;
-
-      const prevBtn = document.createElement('button');
-      prevBtn.className = 'boto-prev';
-      prevBtn.innerHTML = '&lt;';
-      prevBtn.onclick = () => {
-        data.setMonth(data.getMonth() - 1);
-        calendar(widget, data);
-      };
-
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'boto-next';
-      nextBtn.innerHTML = '&gt;';
-      nextBtn.onclick = () => {
-        data.setMonth(data.getMonth() + 1);
-        calendar(widget, data);
-      };
-
-      const span = document.createElement('span');
-      span.innerHTML = `${months[data.getMonth()]}<span class="year">${data.getFullYear()}</span>`;
-
-      header.appendChild(prevBtn);
-      header.appendChild(span);
-      header.appendChild(nextBtn);
-      headerRow.appendChild(header);
-      table.appendChild(headerRow);
-
-      // Days of week
-      const daysRow = document.createElement('tr');
-      for (let d = 0; d < 7; d++) {
-        const th = document.createElement('th');
-        th.className = 'day-header';
-        th.innerText = days_abr[d];
-        daysRow.appendChild(th);
-      }
-      table.appendChild(daysRow);
-
-      // Calculate dates
-      let firstDay = new Date(data.getFullYear(), data.getMonth(), 1);
-      let startDay = new Date(firstDay);
-      startDay.setDate(1 - firstDay.getDay()); // domingo da semana do primeiro dia
-
-      let today = new Date();
-      today.setHours(0,0,0,0);
-
-      for (let r = 0; r < 6; r++) {
-        const row = document.createElement('tr');
-        for (let c = 0; c < 7; c++) {
-          const td = document.createElement('td');
-          const span = document.createElement('span');
-          span.innerText = startDay.getDate();
-
-          // hoje
-          if (startDay.getTime() === today.getTime()) {
-            td.classList.add('avui');
-          }
-
-          // fora do mês
-          if (startDay.getMonth() !== data.getMonth()) {
-            td.classList.add('fora');
-          }
-
-          td.appendChild(span);
-          row.appendChild(td);
-          startDay.setDate(startDay.getDate() + 1);
-        }
-        table.appendChild(row);
-      }
-
-      widget.appendChild(table);
-    }
-
-    calendar(document.getElementById('calendar'), new Date());
-  </script>
-</body>
-</html>
