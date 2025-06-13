@@ -8,7 +8,7 @@
     <title>Saudação e Relógio com Fundo Animado</title>
 
     <style>
-        /* CSS Reset */
+        /* Reset básico */
         body, html {
             margin: 0;
             padding: 0;
@@ -17,7 +17,7 @@
             font-family: 'Bebas Neue', cursive;
         }
 
-        /* Background animado com gradiente que se move suavemente */
+        /* Fundo animado */
         body {
             background: linear-gradient(270deg, #f24478, #553c4e, #330835, #f24478);
             background-size: 800% 800%;
@@ -29,117 +29,126 @@
         }
 
         @keyframes gradientAnim {
-            0%{background-position:0% 50%}
-            50%{background-position:100% 50%}
-            100%{background-position:0% 50%}
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Container central */
-        .full-table {
-            display: table;
-            height: 100%;
-            width: 100%;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-        .table-cell {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-        }
-
+        /* Container principal com fundo transparente e efeito fumê */
         .card {
-            padding: 10px 25px;
-            border-radius: 10px;
-            background: rgba(85, 60, 78, 0.75);
-            width: 85vw;
-            max-width: 480px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(85, 60, 78, 0.4);
+            border-radius: 12px;
+            padding: 20px 25px;
+            max-width: 900px;
+            width: 90vw;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             color: #fff;
-            display: inline-block;
-            box-shadow: 2px 2px 8px rgba(51, 8, 53, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .card:hover {
-            margin-top: 2px;
-            box-shadow: none;
-        }
-
-        .clock {
-            display: inline;
-            font-family: 'Bebas Neue', cursive;
-            font-size: 2em;
-        }
-
-        .time {
-            display: inline;
-            min-width: 37px;
-        }
-
-        .colon {
-            font-size: 1.1em;
-            display: inline-block;
-        }
-
-        .date {
-            display: inline;
-            min-width: 162px;
-            font-family: 'Bebas Neue', cursive;
-            font-size: 2em;
-            padding-right: 30px;
+        /* Linha horizontal para saudação, data e relógio */
+        .top-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .greet {
-            display: inline;
             font-family: 'Dancing Script', cursive;
             font-size: 2rem;
-            padding-right: 30px;
+            white-space: nowrap;
         }
 
-        .quote {
-            margin-top: 15px;
+        .date {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .clock {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .time {
+            min-width: 37px;
+            display: inline-block;
+        }
+
+        .colon {
+            font-size: 1.2em;
+            display: inline-block;
+            padding: 0 4px;
+        }
+
+        /* Frase de citação abaixo, centralizada */
+        .quote-container {
+            max-width: 700px;
+            text-align: center;
             font-style: italic;
-            font-size: 1.2rem;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            color: #fff;
+            font-size: 1.3rem;
             font-family: 'Arial', sans-serif;
+            color: #fff;
         }
 
         .author {
-            color: #fff;
-            text-align: right;
+            margin-top: 6px;
             font-family: Consolas, monospace;
             font-size: 1rem;
-            margin-top: 5px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
+            text-align: right;
+            max-width: 700px;
+            color: #fff;
+        }
+
+        /* Responsivo para telas pequenas */
+        @media (max-width: 600px) {
+            .top-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .greet, .date, .clock {
+                font-size: 1.5rem;
+            }
+
+            .quote-container {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="full-table">
-    <div class="table-cell">
-
-        <div class="card">
+    <div class="card">
+        <div class="top-row">
             <div class="greet" id="greet"></div>
             <div class="date" id="date"></div>
             <div class="clock">
-                <div class="time" id="hour"></div>
-                <div class="colon">:</div>
-                <div class="time" id="min"></div>
-                <div class="colon">:</div>
-                <div class="time" id="sec"></div>
+                <span class="time" id="hour"></span>
+                <span class="colon">:</span>
+                <span class="time" id="min"></span>
+                <span class="colon">:</span>
+                <span class="time" id="sec"></span>
             </div>
-            <div class="quote" id="quote">A melhor forma de prever o futuro é criá-lo.</div>
-            <div class="author" id="author">Peter Drucker</div>
         </div>
 
+        <div class="quote-container">
+            <div id="quote">A melhor forma de prever o futuro é criá-lo.</div>
+            <div class="author" id="author">Peter Drucker</div>
+        </div>
     </div>
-</div>
 
 <script>
     function atualizarData() {
@@ -153,6 +162,7 @@
     function atualizarRelogio() {
         const agora = new Date();
 
+        // Ajusta para horário de Brasília (UTC-3)
         const offsetSP = -3 * 60; // -3 horas em minutos
         const utc = agora.getTime() + agora.getTimezoneOffset() * 60000;
         const horaSP = new Date(utc + offsetSP * 60000);
@@ -161,9 +171,9 @@
         let minutos = zeroEsquerda(horaSP.getMinutes());
         let segundos = zeroEsquerda(horaSP.getSeconds());
 
-        document.getElementById('hour').innerHTML = horas;
-        document.getElementById('min').innerHTML = minutos;
-        document.getElementById('sec').innerHTML = segundos;
+        document.getElementById('hour').textContent = horas;
+        document.getElementById('min').textContent = minutos;
+        document.getElementById('sec').textContent = segundos;
 
         const h = horaSP.getHours();
         let saudacao = '';
@@ -171,7 +181,7 @@
         else if (h < 18) saudacao = 'Boa tarde, Catalyst';
         else saudacao = 'Boa noite, Catalyst';
 
-        document.getElementById('greet').innerHTML = saudacao;
+        document.getElementById('greet').textContent = saudacao;
     }
 
     function zeroEsquerda(num) {
