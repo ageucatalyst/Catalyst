@@ -1,107 +1,215 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Widget de Calendário</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #f191919;
-      font-variant-caps: all-petite-caps;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Widget de Tempo Estético</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Space Grotesk", sans-serif;
+        /* Fundo animado conforme seu CSS */
+        background-color: hsla(5, 100%, 69%, 1);
+        background-image:
+          radial-gradient(at 59% 64%, hsla(342, 100%, 65%, 0.56) 0px, transparent 50%),
+          radial-gradient(at 0% 0%, hsla(19, 56%, 95%, 0.6) 0px, transparent 50%),
+          radial-gradient(at 0% 0%, hsla(21, 56%, 76%, 1) 0px, transparent 50%),
+          radial-gradient(at 83% 45%, hsla(342, 56%, 65%, 1) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, hsla(222, 56%, 52%, 1) 0px, transparent 50%),
+          radial-gradient(at 97% 98%, hsla(254, 56%, 52%, 1) 0px, transparent 50%);
+        background-size: 200% 200%;
+        background-position: 0% 0%;
+        animation: mexefundo 8s infinite;
 
-    .widget {
-      padding: 10px 15px;
-      color: #F24478;
-      text-align: center;
-      border: 3px solid #F24478;
-      border-radius: 5px;
-      box-shadow: 2px 2px 1px 0px #F24478;
-      background: #f191919;
-      width: 1920px;
-      max-width: 100%;
-    }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: black;
+      }
 
-    .greet {
-      font-size: 2em;
-      margin-bottom: 10px;
-    }
+      @keyframes mexefundo {
+        0%,
+        100% {
+          background-position: 0% 0%;
+        }
+        50% {
+          background-position: 100% 100%;
+        }
+      }
 
-    .date {
-      font-size: 1.5em;
-      margin-bottom: 5px;
-    }
+      .widget {
+        text-align: center;
+        padding: 30px;
+        width: 380px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 1px;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+      }
 
-    .clock {
-      font-size: 1.5em;
-    }
+      .time {
+        font-size: 56px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+        color: #ffffff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
 
-    .time {
-      display: inline-block;
-      min-width: 24px;
-    }
+      .date {
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        color: #f8f8ff;
+      }
 
-    .colon {
-      display: inline-block;
-    }
-  </style>
-</head>
-<body>
-  <div class="widget">
-    <div class="greet" id="greet"></div>
-    <div class="date" id="date"></div>
-    <div class="clock">
-      <span class="time" id="hour"></span>
-      <span class="colon">:</span>
-      <span class="time" id="min"></span>
-      <span class="colon">:</span>
-      <span class="time" id="sec"></span>
+      .day {
+        font-size: 28px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin-bottom: 5px;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .quote-container {
+        margin-top: 5px;
+        padding: 5px;
+        border-radius: 1px;
+        background: rgba(0, 0, 0, 0.3);
+        color: #b0c4de;
+      }
+
+      .quote {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 18px;
+        font-style: italic;
+        line-height: 1.5;
+        margin-bottom: 5px;
+      }
+
+      .author {
+        font-family: "Consolas", monospace;
+        font-size: 14px;
+        text-align: right;
+        color: #ffffff;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="widget">
+      <div class="day" id="day"></div>
+      <div class="date" id="date"></div>
+      <div class="time" id="time"></div>
+      <div class="quote-container">
+        <div class="quote" id="quote"></div>
+        <div class="author" id="author"></div>
+      </div>
     </div>
-  </div>
+    <script>
+      const quotes = [
+        {
+          text:
+            "O futuro pertence àqueles que acreditam na beleza de seus sonhos.",
+          author: "Eleanor Roosevelt",
+        },
+        {
+          text: "Esforce-se não para ser um sucesso, mas sim para ser valioso.",
+          author: "Albert Einstein",
+        },
+        { text: "Cada momento é um novo começo.", author: "T.S. Eliot" },
+        {
+          text: "Acredite que você pode e já está no meio do caminho.",
+          author: "Theodore Roosevelt",
+        },
+        {
+          text: "A única maneira de fazer um ótimo trabalho é amar o que você faz.",
+          author: "Steve Jobs",
+        },
+        {
+          text: "A melhor forma de prever o futuro é criá-lo.",
+          author: "Peter Drucker",
+        },
+        {
+          text: "A melhor preparação para o amanhã é fazer o seu melhor hoje.",
+          author: "H. Jackson Brown Jr.",
+        },
+        {
+          text:
+            "O único limite para nossa realização de amanhã são nossas dúvidas de hoje.",
+          author: "Franklin D. Roosevelt",
+        },
+      ];
 
-  <script>
-    const locale = 'pt-BR';
-    const timeZone = 'America/Sao_Paulo';
+      // Função para pegar hora e data no fuso de Brasília e formatar em português do Brasil
+      function updateTimeAndDate() {
+        const optionsDate = {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          timeZone: "America/Sao_Paulo",
+        };
+        const optionsTime = {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+          timeZone: "America/Sao_Paulo",
+        };
 
-    function displayGreetings(hour) {
-      if (hour < 12) return 'Bom dia, Catalyst';
-      if (hour < 18) return 'Boa tarde, Catalyst';
-      return 'Boa noite, Catalyst';
-    }
+        const now = new Date();
 
-    function padZero(num) {
-      return num.toString().padStart(2, '0');
-    }
+        // Usar Intl.DateTimeFormat para data em pt-BR fuso São Paulo (Brasília)
+        const dateFormatter = new Intl.DateTimeFormat("pt-BR", optionsDate);
+        const fullDate = dateFormatter.format(now); // Ex: "quinta-feira, 13 de junho de 2025"
 
-    function updateWidget() {
-      const now = new Date();
+        // Extrair dia da semana e resto da data
+        const dayOfWeek = fullDate.split(",")[0];
+        const dateRest = fullDate.split(",").slice(1).join(",").trim();
 
-      const options = { timeZone, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const data = now.toLocaleDateString(locale, options);
+        // Formatar hora
+        const timeFormatter = new Intl.DateTimeFormat("pt-BR", optionsTime);
+        const timeParts = timeFormatter.formatToParts(now);
+        const hour = timeParts.find((part) => part.type === "hour").value;
+        const minute = timeParts.find((part) => part.type === "minute").value;
+        const second = timeParts.find((part) => part.type === "second").value;
+        const time = `${hour}:${minute}:${second}`;
 
-      const timeOptions = { timeZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      const timeString = new Intl.DateTimeFormat(locale, timeOptions).format(now);
-      const [hourStr, minStr, secStr] = timeString.split(':');
+        document.getElementById("day").textContent = dayOfWeek.toUpperCase();
+        document.getElementById("date").textContent = dateRest;
+        document.getElementById("time").textContent = time;
+      }
 
-      const greeting = displayGreetings(Number(hourStr));
+      function formatQuote(text) {
+        return text.replace(/,\s+/g, ",<br>").replace(/\s+and\s+/g, "<br>e ");
+      }
 
-      document.getElementById('greet').innerText = greeting;
-      document.getElementById('date').innerText = data;
-      document.getElementById('hour').innerText = padZero(hourStr);
-      document.getElementById('min').innerText = padZero(minStr);
-      document.getElementById('sec').innerText = padZero(secStr);
+      function setRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        const selectedQuote = quotes[randomIndex];
+        document.getElementById("quote").innerHTML = `${formatQuote(
+          selectedQuote.text
+        )}`;
+        document.getElementById("author").textContent = selectedQuote.author;
+      }
 
-      setTimeout(updateWidget, 1000);
-    }
-
-    updateWidget();
-  </script>
-</body>
+      updateTimeAndDate();
+      setRandomQuote();
+      setInterval(updateTimeAndDate, 1000);
+      setInterval(setRandomQuote, 60000); // Troca a frase a cada minuto
+    </script>
+  </body>
 </html>
