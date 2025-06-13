@@ -1,73 +1,182 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Bebas+Neue" rel="stylesheet">
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Widget de Tempo Estético</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saudação e Relógio</title>
+
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: "Space Grotesk", sans-serif;
-        background-color: hsla(5, 100%, 69%, 1);
-        background-image:
-          radial-gradient(at 59% 64%, hsla(342, 100%, 65%, 0.56) 0px, transparent 50%),
-          radial-gradient(at 0% 0%, hsla(19, 56%, 95%, 0.6) 0px, transparent 50%),
-          radial-gradient(at 0% 0%, hsla(21, 56%, 76%, 1) 0px, transparent 50%),
-          radial-gradient(at 83% 45%, hsla(342, 56%, 65%, 1) 0px, transparent 50%),
-          radial-gradient(at 100% 100%, hsla(222, 56%, 52%, 1) 0px, transparent 50%),
-          radial-gradient(at 97% 98%, hsla(254, 56%, 52%, 1) 0px, transparent 50%);
-        background-size: 200% 200%;
-        background-position: 0% 0%;
-        animation: mexefundo 8s infinite;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        color: black;
-      }
-
-      @keyframes mexefundo {
-        0%,
-        100% {
-          background-position: 0% 0%;
+        /* CSS Reset */
+        body {
+            background-color: #fff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Bebas Neue', cursive;
         }
-        50% {
-          background-position: 100% 100%;
+
+        h1 {
+            margin-top: 0;
         }
-      }
 
-      .widget {
-        text-align: center;
-        padding: 30px;
-        width: 380px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 1px;
-        backdrop-filter: blur(5px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        color: #ffffff;
-        font-family: "Space Grotesk", sans-serif;
-      }
+        /* CSS Principal */
+        .full-table {
+            display: table;
+            height: 100%;
+            width: 100%;
+        }
 
-      .time {
-        font-size: 56px;
-        font-weight: 700;
-        letter-spacing: 3px;
-        margin-bottom: 10px;
-        color: #ffffff;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      }
+        .table-cell {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+        }
 
-      .date {
-        font-size: 16px;
-        font-weight: 300;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        color: #f8f8ff;
-      }
+        .card {
+            padding: 10px 25px;
+            border-radius: 10px;
+            background: #553c4e;
+            width: 85vw;
+            max-width: 480px;
+            color: #fff;
+            display: inline-block;
+            box-shadow: 2px 2px 1px 0px #330835;
+        }
 
-      .day {
-        font-size: 28px;
-        font-weight: 400;
+        .card:hover {
+            margin-top: 2px;
+            box-shadow: none;
+        }
+
+        .clock {
+            display: inline;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2em;
+        }
+
+        .time {
+            display: inline;
+            min-width: 37px;
+        }
+
+        .colon {
+            font-size: 1.1em;
+            display: inline-block;
+        }
+
+        .date {
+            display: inline;
+            min-width: 162px;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2em;
+            padding-right: 30px;
+        }
+
+        .greet {
+            display: inline;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            padding-right: 30px;
+        }
+
+        .quote {
+            margin-top: 15px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #fff;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .author {
+            color: #fff;
+            text-align: right;
+            font-family: Consolas, monospace;
+            font-size: 1rem;
+            margin-top: 5px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="full-table">
+    <div class="table-cell">
+
+        <div class="card">
+            <div class="greet" id="greet"></div>
+            <div class="date" id="date"></div>
+            <div class="clock">
+                <div class="time" id="hour"></div>
+                <div class="colon">:</div>
+                <div class="time" id="min"></div>
+                <div class="colon">:</div>
+                <div class="time" id="sec"></div>
+            </div>
+            <div class="quote" id="quote">A melhor forma de prever o futuro é criá-lo.</div>
+            <div class="author" id="author">Peter Drucker</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function atualizarData() {
+        const hoje = new Date();
+        // Opções para data em português BR e fuso de Brasília
+        const opcoes = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Sao_Paulo' };
+        const dataFormatada = hoje.toLocaleDateString('pt-BR', opcoes);
+        document.getElementById('date').innerHTML = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+    }
+
+    function atualizarRelogio() {
+        const agora = new Date();
+
+        // Ajuste para fuso horário de Brasília (UTC-3)
+        const offsetSP = -3 * 60; // minutos de diferença
+        const utc = agora.getTime() + agora.getTimezoneOffset() * 60000;
+        const horaSP = new Date(utc + offsetSP * 60000);
+
+        let horas = zeroEsquerda(horaSP.getHours());
+        let minutos = zeroEsquerda(horaSP.getMinutes());
+        let segundos = zeroEsquerda(horaSP.getSeconds());
+
+        document.getElementById('hour').innerHTML = horas;
+        document.getElementById('min').innerHTML = minutos;
+        document.getElementById('sec').innerHTML = segundos;
+
+        // Saudação conforme horário de Brasília
+        const h = horaSP.getHours();
+        let saudacao = '';
+        if (h < 12) saudacao = 'Bom dia, Catalyst';
+        else if (h < 18) saudacao = 'Boa tarde, Catalyst';
+        else saudacao = 'Boa noite, Catalyst';
+
+        document.getElementById('greet').innerHTML = saudacao;
+    }
+
+    function zeroEsquerda(num) {
+        return num < 10 ? '0' + num : num;
+    }
+
+    function atualizarTudo() {
+        atualizarData();
+        atualizarRelogio();
+        setTimeout(atualizarTudo, 500);
+    }
+
+    atualizarTudo();
+</script>
+
+</body>
+</html>
